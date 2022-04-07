@@ -3063,6 +3063,11 @@
   dependencies:
     "function-bind" "^1.1.1"
 
+"haversine@^1.1.1":
+  "integrity" "sha512-KW4MS8+krLIeiw8bF5z532CptG0ZyGGFj0UbKMxx25lKnnJ1hMUbuzQl+PXQjNiDLnl1bOyz23U6hSK10r4guw=="
+  "resolved" "https://registry.npmjs.org/haversine/-/haversine-1.1.1.tgz"
+  "version" "1.1.1"
+
 "hermes-engine@~0.7.0":
   "integrity" "sha512-E2DkRaO97gwL98LPhgfkMqhHiNsrAjIfEk3wWYn2Y31xdkdWn0572H7RnVcGujMJVqZNJvtknxlpsUb8Wzc3KA=="
   "resolved" "https://registry.npmjs.org/hermes-engine/-/hermes-engine-0.7.2.tgz"
@@ -4582,6 +4587,18 @@
   "resolved" "https://registry.npmjs.org/react-is/-/react-is-17.0.2.tgz"
   "version" "17.0.2"
 
+"react-native-background-fetch@~4.0.4":
+  "integrity" "sha512-RZx51NRtGX+BFQXW026HUbXzOvCsQX76uBjU2QbikrtE0BefDbhpUPkM8VwufYod0aN5IQ480UF+D9bwUpsxmg=="
+  "resolved" "https://registry.npmjs.org/react-native-background-fetch/-/react-native-background-fetch-4.0.5.tgz"
+  "version" "4.0.5"
+
+"react-native-background-geolocation@^4.4.6":
+  "integrity" "sha512-D349M33W3lDTxacrZS8NPJV0QIn4LlcREgc3YgrC6AmqLSJFeiRMmPakHHLiVNQnGIoBdmKto3g2em8tryrhwA=="
+  "resolved" "https://registry.npmjs.org/react-native-background-geolocation/-/react-native-background-geolocation-4.4.6.tgz"
+  "version" "4.4.6"
+  dependencies:
+    "react-native-background-fetch" "~4.0.4"
+
 "react-native-codegen@^0.0.6":
   "integrity" "sha512-cMvrUelD81wiPitEPiwE/TCNscIVauXxmt4NTGcy18HrUd0WRWXfYzAQGXm0eI87u3NMudNhqFj2NISJenxQHg=="
   "resolved" "https://registry.npmjs.org/react-native-codegen/-/react-native-codegen-0.0.6.tgz"
@@ -4624,7 +4641,7 @@
     "normalize-css-color" "^1.0.2"
     "prop-types" "^15.6.0"
 
-"react-native@*", "react-native@>= 0.51", "react-native@>=0.64.0-rc.0 || 0.0.0-*", "react-native@0.64.3":
+"react-native@*", "react-native@>= 0.51", "react-native@>=0.28.0", "react-native@>=0.36.0", "react-native@>=0.64.0-rc.0 || 0.0.0-*", "react-native@0.64.3":
   "integrity" "sha512-2OEU74U0Ek1/WeBzPbg6XDsCfjF/9fhrNX/5TFgEiBKd5mNc9LOZ/OlMmkb7iues/ZZ/oc51SbEfLRQdcW0fVw=="
   "resolved" "https://registry.npmjs.org/react-native/-/react-native-0.64.3.tgz"
   "version" "0.64.3"

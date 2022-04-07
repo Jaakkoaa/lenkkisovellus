@@ -1,8 +1,10 @@
 import {StyleSheet, View, Text, Button} from 'react-native'
 import MapView from 'react-native-maps'
-import * as Location from'expo-location'
+import BackgroundGeolocation from 'react-native-background-geolocation';
 import React from 'react'
 import { FontAwesome5 } from '@expo/vector-icons'
+import haversine from 'haversine'
+import Timer from './Timer'
 
 const styles = StyleSheet.create({
     map:{ flex:1 },
@@ -11,20 +13,39 @@ const styles = StyleSheet.create({
     startButton:{ backgroundColor: 'lightblue', padding:20 }
 })
 
-//sovellus toimii sen verran että kun nappia painaa, sovellus 
-//console logaa käyttäjän koordinaatit niiden muuttuessa
-// seuraavaksi luoda niistä polyline ja tehdä sekunttikello
-//todo: polyline ja sekuntikello
+
+// TODO sekuntikello
 
 export default function CreateTraining() {
 
     const [coords, setCoords] = React.useState([])
     const [trainingState, setTrainingState] = React.useState(false)
+    const [speed, setSpeed] = React.useState('')
+    const [distance , setDistance] = React.useState(0)
+    const [time, setTime] = React.useState(0)
+
 
     const getLocation = async () => {
-        let location = await Location.getCurrentPositionAsync({})    
-        setCoords(location) 
-        //tähän tyyliin: setTrainings(arr => [...arr, element]) 
+        let location = await Location.getCurrentPositionAsync({})
+        setCoords(arr => [...arr, {
+            latitude: location.coords.latitude,
+            longitude: location.coords.longitude
+        }]) 
+        setSpeed(location.coords.speed)
+        calculateLength(location)
+    }
+
+    const calculateLength = (location) => {
+        const end = {
+            latitude: location.coords.latitude,
+            longitude: location.coords.longitude
+        }
+        const start = coords[coords.length - 2]
+
+        console.log(haversine(start, end))
+
+        setDistance(distance + haversine(start, end , {unit: 'meter'}))
+        
     }
 
     const buttonPressed = () => {
@@ -47,9 +68,10 @@ export default function CreateTraining() {
             Alert.alert('No permission to get location')}
     },[])
 
+    React.useEffect(() => console.log(`coordinates: ${coords.length}`),[coords])
+    React.useEffect(() => console.log(`current speed: ${speed}`),[speed])
+    React.useEffect(() => console.log(`current distance: ${distance}`),[distance])
 
-    //kun käyttäjän location muuttuu, kartta tarkistaa onko treeni käynnissä
-    //jos treeni on käynnissä location lisätään arraýhin coords
     return(
         <View style={styles.screen} >
 
@@ -58,7 +80,13 @@ export default function CreateTraining() {
             followsUserLocation
             showsUserLocation
             onUserLocationChange={() => trainingState && getLocation()}
-            />
+            >
+                 <MapView.Polyline 
+                    coordinates={coords}
+                    strokeWidth={2}
+                    strokeColor="red"/>
+
+            </MapView>
 
             <View
             style={styles.info} 
@@ -68,7 +96,9 @@ export default function CreateTraining() {
                 name='clock'
                 onPress={buttonPressed}
                 ></FontAwesome5.Button>
-
+            <Text>speed: {speed}</Text>
+            <Text>distance: {distance}</Text>
+            <Timer timerBoolean={trainingState} time={time} setTime={setTime}/>
             </View>
 
         </View>
