@@ -7,6 +7,7 @@ import Tracking from './Tracking'
 import { TaskManagerTaskExecutor } from 'expo-task-manager'
 import { sessionStorage } from '../../classes/Storage'
 import { startLocationTrackingAsync, stopLocationTrackingAsync } from './Tracking'
+import haversine from 'haversine'
 
 const styles = StyleSheet.create({
     map:{ flex:1 },
@@ -21,6 +22,8 @@ const styles = StyleSheet.create({
 export default function CreateTraining() {
 
     const [pressed, setPressed] = React.useState(false)
+    const [locations, setLocations] = React.useState([])
+    const [length, setLength] = React.useState(0)
 
     const buttonPressed = () => {
         if(!pressed) {
@@ -32,6 +35,13 @@ export default function CreateTraining() {
         }
       } 
 
+    const refreshInfo = () => {
+      
+      const coords = sessionStorage.getItem('coords')
+      setLocations(coords.coords ? coords.coords : [])
+      console.log(coords)
+    }
+
     return(
         <View style={styles.screen} >
 
@@ -40,18 +50,25 @@ export default function CreateTraining() {
             followsUserLocation
             showsUserLocation
             >
-               
+                <MapView.Polyline 
+                coordinates={locations}
+                strokeWidth={2}
+                strokeColor="red"/>
 
             </MapView>
 
             <View
             style={styles.info} 
             >
-            <Text>{sessionStorage.getItem('currCoords')}</Text>
+            <Text></Text>
 
             <Button
             onPress={buttonPressed}
             title={!pressed ? 'Start the run' : 'Finish the run'}
+            ></Button>
+             <Button
+            onPress={refreshInfo}
+            title={'see locations'}
             ></Button>
         
             </View>

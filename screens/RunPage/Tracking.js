@@ -4,6 +4,7 @@ import * as Location from 'expo-location';
 import { View, Text, Button, NativeModules, TurboModuleRegistry} from 'react-native'
 import { TaskManagerTaskExecutor } from 'expo-task-manager';
 import { sessionStorage } from '../../classes/Storage';
+import haversine from 'haversine';
 
 const TASK_FETCH_LOCATION = 'TASK_FETCH_LOCATION';
 
@@ -13,8 +14,6 @@ const TASK_FETCH_LOCATION = 'TASK_FETCH_LOCATION';
     const { status } = await Location.requestForegroundPermissionsAsync();
     if (status === 'granted') {
       
-      sessionStorage.setItem('coords', [])
-
       await Location.startLocationUpdatesAsync(TASK_FETCH_LOCATION, {
         accuracy: Location.Accuracy.Highest,
         distanceInterval: 1, // minimum change (in meters) betweens updates
@@ -33,6 +32,7 @@ const TASK_FETCH_LOCATION = 'TASK_FETCH_LOCATION';
     Location.hasStartedLocationUpdatesAsync(TASK_FETCH_LOCATION).then((value) => {
       if (value) {
         Location.stopLocationUpdatesAsync(TASK_FETCH_LOCATION);
+        sessionStorage.setItem('coords', {})
       }
     });
   }
@@ -42,11 +42,24 @@ TaskManager.defineTask(TASK_FETCH_LOCATION, async ({ data: { locations }, error 
     console.error(error);
     return;
   } else {
+    console.log('location updated')
+    let allCoords = []
+    let km = 0
+
     const currCoords = locations[0].coords
-    let array = sessionStorage.getItem('coords')
-    array.push(currCoords)
-    sessionStorage.setItem('coords', array)
-    console.log(sessionStorage.getItem('coords'))
+    const lastCoords = sessionStorage.getItem('coords')
+
+
+    if (lastCoords && lastCoords.coords) {lastCoords.coords.forEach(item => allCoords.push(item)) }
+    allCoords.push(currCoords)
+
+    if (allCoords.length > 1 ) {
+      if (lastCoords.runLength) km = lastCoords.runLength + haversine(allCoords[allCoords.length - 2], allCoords[allCoords.length - 1], {unit: 'meter'})
+      else km = haversine(allCoords[allCoords.length - 2], allCoords[allCoords.length - 1], {unit: 'meter'})
+    }
+
+    sessionStorage.setItem('coords', {coords: allCoords, runLength: km})
+    
   }
 })
 
