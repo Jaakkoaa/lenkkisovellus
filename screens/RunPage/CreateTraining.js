@@ -25,13 +25,34 @@ export default function CreateTraining() {
     const [locations, setLocations] = React.useState([])
     const [length, setLength] = React.useState(0)
 
+
+    
+    React.useEffect(() => {
+      let interval = null
+      if (pressed) {
+        interval = setInterval(() => {
+          refreshInfo()
+        }, 5000) 
+        } else {
+          clearInterval(interval)
+        }
+
+        return () => {
+          clearInterval(interval)
+          refreshInfo()
+        }
+
+    },[pressed])
+
     const buttonPressed = () => {
+
         if(!pressed) {
           startLocationTrackingAsync()
           setPressed(true)
         } else {
           stopLocationTrackingAsync()
           setPressed(false)
+          
         }
       } 
 
@@ -39,8 +60,10 @@ export default function CreateTraining() {
       
       const coords = sessionStorage.getItem('coords')
       setLocations(coords.coords ? coords.coords : [])
+      setLength(coords.runLength ? coords.runLength : 0)
       console.log(coords)
     }
+
 
     return(
         <View style={styles.screen} >
@@ -60,17 +83,12 @@ export default function CreateTraining() {
             <View
             style={styles.info} 
             >
-            <Text></Text>
+            <Text>{Math.ceil(length) / 1000} km</Text>
 
             <Button
             onPress={buttonPressed}
             title={!pressed ? 'Start the run' : 'Finish the run'}
             ></Button>
-             <Button
-            onPress={refreshInfo}
-            title={'see locations'}
-            ></Button>
-        
             </View>
         </View>
         
