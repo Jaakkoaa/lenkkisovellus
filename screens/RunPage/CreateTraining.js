@@ -12,8 +12,16 @@ import haversine from 'haversine'
 const styles = StyleSheet.create({
     map:{ flex:1 },
     screen:{ flex:1 },
-    info:{ height:'20%',backgroundColor: 'white', alignItems:'center' },
-    startButton:{ backgroundColor: 'lightblue', padding:20 }
+    info:{
+      backgroundColor: '#ffffff',
+      height: 200,
+      justifyContent: 'center',
+      alignItems: 'center',
+      paddingVertical: 15,
+      flexDirection:'row'
+  },
+    startButton:{ color: 'red' },
+    infoPart:{ margin: 20, alignItems:'center' }
 })
 
 
@@ -83,14 +91,24 @@ export default function CreateTraining() {
             <View
             style={styles.info} 
             >
-            <Text>{Math.ceil(length) / 1000} km</Text>
+              
+              <View styles={styles.infoPart}>
+                <Button
+                style={styles.startButton}
+                onPress={buttonPressed}
+                title={!pressed ? 'Start the run' : 'Finish the run'}
+                ></Button>
+              </View>
 
-            <Button
-            onPress={buttonPressed}
-            title={!pressed ? 'Start the run' : 'Finish the run'}
-            ></Button>
+              <View styles={styles.infoPart}>
+                <Text>{Math.ceil(length) / 1000} km</Text>
+              </View>
+
+
             </View>
         </View>
         
     )
+
+  
 }
