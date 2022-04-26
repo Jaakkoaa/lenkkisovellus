@@ -14,6 +14,8 @@ const TASK_FETCH_LOCATION = 'TASK_FETCH_LOCATION';
     const { status } = await Location.requestForegroundPermissionsAsync();
     if (status === 'granted') {
       
+      sessionStorage.setItem('coords', {})
+      sessionStorage.setItem('startingTime', new Date())
       await Location.startLocationUpdatesAsync(TASK_FETCH_LOCATION, {
         accuracy: Location.Accuracy.Highest,
         distanceInterval: 1, // minimum change (in meters) betweens updates
@@ -32,7 +34,6 @@ const TASK_FETCH_LOCATION = 'TASK_FETCH_LOCATION';
     Location.hasStartedLocationUpdatesAsync(TASK_FETCH_LOCATION).then((value) => {
       if (value) {
         Location.stopLocationUpdatesAsync(TASK_FETCH_LOCATION);
-        sessionStorage.setItem('coords', {})
       }
     });
   }

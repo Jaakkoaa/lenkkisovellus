@@ -18,6 +18,7 @@
     "expo-status-bar": "~1.2.0",
     "expo-task-manager": "^10.1.1",
     "haversine": "^1.1.1",
+    "haversineformula": "^1.1.1",
     "react": "17.0.1",
     "react-dom": "17.0.1",
     "react-native": "0.64.3",
