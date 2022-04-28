@@ -1,32 +1,13 @@
-import {StyleSheet, View, Text, Button} from 'react-native'
+import {StyleSheet, View, Text, Button, TouchableOpacity} from 'react-native'
 import MapView from 'react-native-maps'
-import BackgroundGeolocation from '@mauron85/react-native-background-geolocation'
 import React from 'react'
-import { FontAwesome5 } from '@expo/vector-icons'
-import Tracking from './Tracking'
-import { TaskManagerTaskExecutor } from 'expo-task-manager'
 import { sessionStorage } from '../../classes/Storage'
 import { startLocationTrackingAsync, stopLocationTrackingAsync } from './Tracking'
-import haversine from 'haversine'
-
-const styles = StyleSheet.create({
-    map:{ flex:1 },
-    screen:{ flex:1 },
-    info:{
-      backgroundColor: '#ffffff',
-      height: 200,
-      justifyContent: 'center',
-      alignItems: 'center',
-      paddingVertical: 15,
-      flexDirection:'row', 
-      
-    },
-    startButton:{ color: 'red' },
-    infoPart:{ margin: 20, alignItems:'center' }
-})
+import {db, auth} from '../../firebase'
+import { collection, addDoc} from "firebase/firestore"
+import polyline from 'polyline'
 
 
-// TODO sekuntikello
 
 export default function CreateTraining() {
 
@@ -48,7 +29,7 @@ export default function CreateTraining() {
 
         return () => {
           clearInterval(interval)
-          refreshInfo()
+          
         }
 
     },[pressed])
@@ -63,9 +44,16 @@ export default function CreateTraining() {
         } else {
           stopLocationTrackingAsync()
           setPressed(false)
-          
+          trainingToDb()
+          refreshInfo()
         }
       } 
+
+    
+    const timeToFormat = () => {
+      const seconds = Math.ceil(time / 1000)
+      return seconds + 's'
+    }
 
     const refreshInfo = () => {
       
@@ -78,6 +66,20 @@ export default function CreateTraining() {
       setTime(currentTime - sessionStorage.getItem('startingTime'))
     }
 
+    const trainingToDb = () => {
+      const endingTime = new Date()
+      const coordinates = sessionStorage.getItem('coords')
+
+      addDoc(collection(db, `trainings/`),
+        {
+            startingTime: sessionStorage.getItem('startingTime'),
+            endingTime: endingTime,
+            coordinates: coordinates.coords,
+            length: length,
+            user: auth.currentUser.uid
+        }
+      ).catch(err => console.error(err))
+    }
 
     return(
         <View style={styles.screen} >
@@ -94,30 +96,74 @@ export default function CreateTraining() {
 
             </MapView>
 
-            <View
-            style={styles.info} 
-            >
+          <View style={styles.infoContainer} >
+            <View style={styles.info} >
               
-    
-
               <View style={styles.infoPart}>
-                <Text>{Math.ceil(length) / 1000} km</Text>
+                <Text style={styles.infoText}>{Math.ceil(length) / 1000} km</Text>
               </View>
 
               
               <View style={styles.infoPart}>
-                <Text>{Math.ceil(time / 1000)} seconds</Text>
+                <Text style={styles.infoText}>{timeToFormat()}</Text>
               </View>
             </View>
 
-            <Button
+            <TouchableOpacity
                 style={styles.startButton}
                 onPress={buttonPressed}
-                title={!pressed ? 'Start the run' : 'Finish the run'}
-                ></Button>
+               >
+                <Text style={styles.buttonText}>{!pressed ? 'Start the run' : 'Finish the run'}</Text>
+                
+            </TouchableOpacity>
+          
+          </View >
+          
         </View>
         
     )
 
   
 }
+
+const styles = StyleSheet.create({
+  map:{ 
+    flex:1
+  },
+  screen:{ 
+    flex:1 
+  },
+  info:{
+    justifyContent: 'center',
+    flexDirection:'row', 
+  },
+  infoContainer: {
+    alignItems: 'center',
+    height:'30%',
+    backgroundColor:'lightgrey',
+  },
+  startButton:{ 
+    marginTop: '5%',
+    padding:10,
+    borderRadius:10,
+    backgroundColor:'white',
+    width:'85%',
+    alignItems:'center'
+  },
+  infoPart:{ 
+    backgroundColor:'white',
+    marginTop: '5%',
+    margin: '5%',
+    alignItems:'center',
+    padding:10,
+    width: '40%',
+    borderRadius:10
+  },
+  buttonText:{
+    fontSize: 25
+  },
+  infoText:{
+    fontSize: 20
+  }
+
+})
