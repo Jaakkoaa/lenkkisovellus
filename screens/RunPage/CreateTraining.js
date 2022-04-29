@@ -68,7 +68,7 @@ export default function CreateTraining() {
     const trainingToDb = () => {
       const endingTime = new Date()
       const coordinates = sessionStorage.getItem('coords')
-
+      try {
       addDoc(collection(db, `trainings/`),
         {
             startingTime: sessionStorage.getItem('startingTime'),
@@ -78,6 +78,7 @@ export default function CreateTraining() {
             user: auth.currentUser.uid
         }
       ).catch(err => console.error(err))
+      } catch {console.log('cannot save run without gps')}
     }
 
     return(
