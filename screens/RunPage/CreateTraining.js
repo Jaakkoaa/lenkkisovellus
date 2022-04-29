@@ -5,8 +5,7 @@ import { sessionStorage } from '../../classes/Storage'
 import { startLocationTrackingAsync, stopLocationTrackingAsync } from './Tracking'
 import {db, auth} from '../../firebase'
 import { collection, addDoc} from "firebase/firestore"
-import polyline from 'polyline'
-
+import { FontAwesome5, MaterialCommunityIcons } from '@expo/vector-icons';
 
 
 export default function CreateTraining() {
@@ -88,6 +87,7 @@ export default function CreateTraining() {
             style={ styles.map } 
             followsUserLocation
             showsUserLocation
+            mapType='terrain'
             >
                 <MapView.Polyline 
                 coordinates={locations}
@@ -113,7 +113,16 @@ export default function CreateTraining() {
                 style={styles.startButton}
                 onPress={buttonPressed}
                >
-                <Text style={styles.buttonText}>{!pressed ? 'Start the run' : 'Finish the run'}</Text>
+                {
+                !pressed ? 
+                  <View style={styles.buttonOnFinish}> 
+                    <Text style={styles.buttonText}> Start the run </Text> 
+                    <MaterialCommunityIcons name="whistle" size={28} color="darkred" />
+                  </View>
+                  : <View style={styles.buttonOnFinish}> 
+                      <Text style={styles.buttonText}> Finish the run </Text> 
+                      <FontAwesome5 name="flag-checkered" size={24} color="black" />
+                    </View>}
                 
             </TouchableOpacity>
           
@@ -136,11 +145,15 @@ const styles = StyleSheet.create({
   info:{
     justifyContent: 'center',
     flexDirection:'row', 
+    
   },
   infoContainer: {
     alignItems: 'center',
     height:'30%',
-    backgroundColor:'lightgrey',
+    backgroundColor:'#F5F5F5',
+    borderColor:'#F5F5F5',
+    borderTopColor:'black',
+    borderWidth:1
   },
   startButton:{ 
     marginTop: '5%',
@@ -148,7 +161,8 @@ const styles = StyleSheet.create({
     borderRadius:10,
     backgroundColor:'white',
     width:'85%',
-    alignItems:'center'
+    alignItems:'center',
+    borderWidth:1
   },
   infoPart:{ 
     backgroundColor:'white',
@@ -157,11 +171,16 @@ const styles = StyleSheet.create({
     alignItems:'center',
     padding:10,
     width: '40%',
-    borderRadius:10
+    borderRadius:10,
+    borderWidth:1
   },
   buttonText:{
-    fontSize: 25
+    fontSize: 25,
+    color:'black'
   },
+  buttonOnFinish:{
+    flexDirection:'row'
+  },  
   infoText:{
     fontSize: 20
   }

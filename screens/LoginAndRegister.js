@@ -72,46 +72,43 @@ const styles = StyleSheet.create({
     },
     email: {
         padding:10,
-        backgroundColor:'lightgrey',
+        backgroundColor:'white',
         marginTop: '70%',
         width: '80%',
         height: '10%',
         borderRadius:10,
         borderColor: 'black',
-        borderWidth:4,
+        borderWidth:1
     },
     pword: {
         padding:10,
-        backgroundColor:'lightgrey',
-        marginTop: 10,
+        backgroundColor:'white',
+        marginTop: '1%',
         width: '80%',
         height: '10%',
         borderRadius:10,
         borderColor: 'black',
-        borderWidth:4,
+        borderWidth:1
     },
     login: {
-        backgroundColor:'lightgrey',
+        backgroundColor:'white',
         marginTop: '5%',
-        height:'10%',
         borderColor: 'black',
-        borderWidth:4,
         alignItems: 'center',
         width:'60%',
         borderRadius:10,
-        
+        borderWidth:1
     },
     buttonText: {
-        marginTop: '5%',
+        margin: '5%',
         fontSize: 26,
         color:'black'
     },
     register: {
-        backgroundColor:'lightgrey',
+        borderWidth:1,
+        backgroundColor:'white',
         marginTop: '1%',
-        height:'10%',
         borderColor: 'black',
-        borderWidth:4,
         alignItems: 'center',
         width:'60%',
         borderRadius:10,

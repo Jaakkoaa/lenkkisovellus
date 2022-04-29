@@ -1,7 +1,8 @@
-import { View, Text } from "react-native";
+import { View, Text,FlatList } from "react-native";
 import {db, auth} from '../firebase'
 import React from "react";
 import { getDocs, collection, snapshot, query,where  } from "firebase/firestore";
+import Training from './Training'
 
 export default function SeeTrainings() {
 
@@ -12,13 +13,22 @@ export default function SeeTrainings() {
         const q = query(collection(db, 'trainings/') , where("user", "==", auth.currentUser.uid))
         const snapshot = await getDocs(q)
         snapshot.forEach((doc) => {
-            console.log(doc.id, " => ", doc.data());
+            setTrainings(arr => [...arr, doc.data()])
           });
     }
 
     React.useEffect(() => getTrainings(),[])
+    React.useEffect(() => console.log(trainings) ,[trainings])
 
     return(
-        <View><Text>see the trainings</Text></View>
+        <View
+        style={{alignItems:'center'}}>
+        <FlatList
+        style={{width:'90%', marginTop:40}}
+        data={trainings}
+        renderItem={item => {return <Training item={item}/>}}
+        keyExtractor={training => training.id}
+        >
+         </FlatList></View>
     )
 }
