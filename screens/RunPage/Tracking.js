@@ -5,6 +5,7 @@ import { View, Text, Button, NativeModules, TurboModuleRegistry} from 'react-nat
 import { TaskManagerTaskExecutor } from 'expo-task-manager';
 import { sessionStorage } from '../../classes/Storage';
 import haversine from 'haversine';
+import haversineformula from 'haversineformula'
 
 const TASK_FETCH_LOCATION = 'TASK_FETCH_LOCATION';
 
@@ -50,13 +51,14 @@ TaskManager.defineTask(TASK_FETCH_LOCATION, async ({ data: { locations }, error 
     const currCoords = locations[0].coords
     const lastCoords = sessionStorage.getItem('coords')
 
+    console.log(lastCoords)
 
     if (lastCoords && lastCoords.coords) {lastCoords.coords.forEach(item => allCoords.push(item)) }
     allCoords.push(currCoords)
 
     if (allCoords.length > 1 ) {
-      if (lastCoords.runLength) km = lastCoords.runLength + haversine(allCoords[allCoords.length - 2], allCoords[allCoords.length - 1], {unit: 'meter'})
-      else km = haversine(allCoords[allCoords.length - 2], allCoords[allCoords.length - 1], {unit: 'meter'})
+      if (lastCoords.runLength) km = lastCoords.runLength + haversineformula.twoCoordinates(allCoords[allCoords.length - 2], allCoords[allCoords.length - 1], 'meter')
+      else km = haversineformula.twoCoordinates(allCoords[allCoords.length - 2], allCoords[allCoords.length - 1], 'meter')
     }
 
     sessionStorage.setItem('coords', {coords: allCoords, runLength: km})

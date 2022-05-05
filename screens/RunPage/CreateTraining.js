@@ -51,7 +51,11 @@ export default function CreateTraining() {
     
     const timeToFormat = () => {
       const seconds = Math.ceil(time / 1000)
-      return seconds + 's'
+      const minutes = Math.floor(seconds / 60)
+      
+      const clockSeconds = seconds - minutes * 60
+
+      return minutes + `:` + clockSeconds
     }
 
     const refreshInfo = () => {
@@ -161,7 +165,7 @@ const styles = StyleSheet.create({
     padding:10,
     borderRadius:10,
     backgroundColor:'white',
-    width:'85%',
+    width:'90%',
     alignItems:'center',
     borderWidth:1
   },

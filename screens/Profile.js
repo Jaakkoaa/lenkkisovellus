@@ -52,15 +52,16 @@ const styles = StyleSheet.create({
         flexDirection:'row',
     },
     logoutButton:{
-        backgroundColor:'grey',
+        backgroundColor:'white',
         width:'50%',
         marginTop:'100%',
         borderRadius:10,
         alignItems:'center',
-        padding:2
+        padding:2,
+        
     },
     buttonText:{
         fontSize:22,
-        color:'lightgrey',
+        color:'black',
     },
 })
