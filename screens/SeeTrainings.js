@@ -15,7 +15,7 @@ export default function SeeTrainings() {
         const q = query(collection(db, 'trainings/') , where("user", "==", auth.currentUser.uid))
         const snapshot = await getDocs(q)
         snapshot.forEach((doc) => {
-            setTrainings(arr => [...arr, doc.data()])
+            setTrainings(arr => [...arr, {id: doc.id, data: doc.data()}])
           });
         setLoading(false)
     }

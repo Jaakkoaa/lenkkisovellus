@@ -1,14 +1,36 @@
-import { StyleSheet, View, Text, Button, FlatList, Image, TouchableOpacity} from 'react-native';
+import { StyleSheet, View, Text, Button, FlatList, Image, TouchableOpacity, Alert} from 'react-native';
 import React from 'react';
 import MapView from 'react-native-maps'
 import { Entypo } from '@expo/vector-icons';
+import {db} from '../firebase'
+import { doc, deleteDoc } from 'firebase/firestore';
+
 //import Polyline from '@mapbox/polyline';
 
 export default function Training({item}) {
 
+    const training = item.item.data
+
+    const deleteTraining = () => {
+    Alert.alert(
+      "Are you sure you want to delete this training?",
+      "",
+      [
+        {
+          text: "Cancel",
+          onPress: () => console.log("Cancel Pressed"),
+          style: "cancel"
+        },
+        { text: "delete", onPress: async () => {
+
+            await deleteDoc(doc(db, "trainings", item.item.id))
+
+        } }
+      ]
+    )}
 
     const timeToFormat = () => {
-        const seconds = (item.item.endingTime.seconds - item.item.startingTime.seconds) / (item.item.length / 1000)
+        const seconds = (training.endingTime.seconds - training.startingTime.seconds) / (training.length / 1000)
         const minutes = Math.floor(seconds / 60)
         
         const clockSeconds = seconds - minutes * 60
@@ -23,7 +45,7 @@ return(
             
                 <View style={styles.dButtonContainer}>
                     <TouchableOpacity
-                    onPress={() => console.log('delete')}
+                    onPress={deleteTraining}
                     style={styles.deleteButton}
                     >
                         <Entypo name="cross" size={24} color="black" />
@@ -33,11 +55,11 @@ return(
 
                 <View style={styles.row}>
                     <Text style={styles.data}>Run length: </Text>
-                    <Text style={styles.data}>{(item.item.length / 1000).toFixed(2)} km</Text>
+                    <Text style={styles.data}>{(training.length / 1000).toFixed(2)} km</Text>
                 </View>
                 <View style={styles.row}>
                     <Text style={styles.data}>Time moved: </Text>
-                    <Text style={styles.data}>{ ((item.item.endingTime.seconds - item.item.startingTime.seconds)/60).toFixed(2)  } minutes</Text>
+                    <Text style={styles.data}>{ ((training.endingTime.seconds - training.startingTime.seconds)/60).toFixed(2)  } minutes</Text>
                 </View>
                 <View style={styles.row}>
                     <Text style={styles.data}>Average Speed: </Text>
@@ -45,7 +67,7 @@ return(
                 </View>
                 <View style={styles.row}>
                     <Text style={styles.data}>Date: </Text>
-                    <Text style={styles.data}>{`${new Date(item.item.startingTime.seconds * 1000)}`}</Text>
+                    <Text style={styles.data}>{`${new Date(training.startingTime.seconds * 1000)}`}</Text>
                 </View>
 
                
@@ -54,14 +76,14 @@ return(
                     mapType='terrain'
                     liteMode={true}
                     initialRegion={{
-                        latitude: item.item.coordinates[0].latitude,
-                        longitude: item.item.coordinates[0].longitude,
+                        latitude: training.coordinates[0].latitude,
+                        longitude: training.coordinates[0].longitude,
                         latitudeDelta: 0.0322,
                         longitudeDelta: 0.0221
                     }}>
 
                     <MapView.Polyline 
-                    coordinates={item.item.coordinates}
+                    coordinates={training.coordinates}
                     strokeWidth={2}
                     strokeColor="red"/>
                 </MapView>
