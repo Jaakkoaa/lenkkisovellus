@@ -35,7 +35,7 @@ export default function SeeTrainings() {
         onRefresh={()=> getTrainings()}
         style={styles.flatlist}
         data={trainings}
-        renderItem={item => {return <Training item={item}/>}}
+        renderItem={item => {return <Training item={item} getTrainings={getTrainings}/>}}
         keyExtractor={training => training.id}
         >
          </FlatList></View>

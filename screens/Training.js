@@ -7,7 +7,7 @@ import { doc, deleteDoc } from 'firebase/firestore';
 
 //import Polyline from '@mapbox/polyline';
 
-export default function Training({item}) {
+export default function Training({item, getTrainings}) {
 
     const training = item.item.data
 
@@ -19,11 +19,12 @@ export default function Training({item}) {
         {
           text: "Cancel",
           onPress: () => console.log("Cancel Pressed"),
-          style: "cancel"
+        
         },
         { text: "delete", onPress: async () => {
 
             await deleteDoc(doc(db, "trainings", item.item.id))
+            getTrainings()
 
         } }
       ]
@@ -99,7 +100,8 @@ return(
           marginTop:5,
           padding:5,
           backgroundColor: 'white',
-          alignItems:'center'
+          alignItems:'center',
+          marginBottom:10
         },
         button: { 
             width:'20%'
